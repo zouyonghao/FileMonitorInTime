@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "336355005448",
+    "firebase_url": "https://filemonitorintimeads.firebaseio.com",
+    "project_id": "filemonitorintimeads",
+    "storage_bucket": "filemonitorintimeads.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:336355005448:android:892fa205d4c84f9b",
+        "android_client_info": {
+          "package_name": "com.haozi1994.filemonitorintime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "336355005448-n3sjb8975fefe2tmipbcm9uf7nbjnfnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_HGGuSUp3turw_LZx6IaHZKksxyrhz2Q"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
