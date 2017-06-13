@@ -18,15 +18,28 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FileObserver observer;
+    private RecursiveFileObserver observer;
+
+    private ArrayList<String> files;
 
     public MainActivity() {
         this.observer = new RecursiveFileObserver(Environment.getExternalStorageDirectory().toString());
+        files = new ArrayList<>();
+        this.observer.setFiles(files);
         this.observer.startWatching();
     }
+
+    ArrayAdapter<String> adapter;
+
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,15 +47,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,17 +57,51 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ListView listView = (ListView) findViewById(R.id.list_view);
-        String[] values = new String[]{"Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, values);
+        listView = (ListView) findViewById(R.id.list_view);
+
+        files.add("aaa");
+        adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_list_item_1, files);
+
+        adapter.setNotifyOnChange(true);
+
         listView.setAdapter(adapter);
+
+        files.add("bbb");
+        adapter.notifyDataSetChanged();
+//        adapter.insert("aaa",0);
+        adapter.add("ccc");
+
+        observer.setAdapter(adapter);
 
         AdView adView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(10000);
+
+                    File test = new File(Environment.getExternalStorageDirectory().toString() + "/a");
+                    File test1 = new File(Environment.getExternalStorageDirectory().toString()+"/b");
+                    File test2 = new File(Environment.getExternalStorageDirectory().toString()+"/c");
+                    File test3 = new File(Environment.getExternalStorageDirectory().toString()+"/d");
+
+                    if (test.exists()) {
+                        test.delete();
+                    }
+                    test.mkdir();
+                    //test.createNewFile();
+//                    test1.mkdir();
+//                    test2.mkdir();
+//                    test3.mkdir();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
     }
 
@@ -105,17 +143,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else
         if (id == R.id.ads) {
             Toast.makeText(this, "Please send email to yonghaoz1994@gmail.com",
                     Toast.LENGTH_LONG).show();

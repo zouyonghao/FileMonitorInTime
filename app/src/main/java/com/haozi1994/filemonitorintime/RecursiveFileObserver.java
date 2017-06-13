@@ -2,6 +2,7 @@ package com.haozi1994.filemonitorintime;
 
 import android.os.FileObserver;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class RecursiveFileObserver extends FileObserver {
 
     private Thread watchThread;
     private boolean running;
+    private List<String> files;
+    private ArrayAdapter<String> adapter;
 
     @Override
     public void startWatching() {
@@ -90,10 +93,14 @@ public class RecursiveFileObserver extends FileObserver {
         mObservers = null;
     }
 
-    ;
-
     @Override
     public void onEvent(int event, String path) {
+        if (!path.contains("null")) {
+            this.adapter.add(path.substring(path.indexOf(mPath) + mPath.length()));
+        }
+//        if (this.adapter != null) {
+//            this.adapter.notifyDataSetChanged();
+//        }
         switch (event) {
             case FileObserver.ACCESS:
                 Log.i("RecursiveFileObserver", "ACCESS: " + path);
@@ -137,6 +144,10 @@ public class RecursiveFileObserver extends FileObserver {
         }
     }
 
+    public void setAdapter(ArrayAdapter<String> adapter) {
+        this.adapter = adapter;
+    }
+
     /**
      * Monitor single directory and dispatch all events to its parent, with full
      * path.
@@ -159,6 +170,10 @@ public class RecursiveFileObserver extends FileObserver {
             String newPath = mPath + "/" + path;
             RecursiveFileObserver.this.onEvent(event, newPath);
         }
+    }
+
+    public void setFiles(List<String> files) {
+        this.files = files;
     }
 
 }
