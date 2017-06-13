@@ -32,5 +32,5 @@
     <item
         android:id="@+id/ads"
         android:icon="@drawable/ic_menu_send"
-        android:title="Ads" />
+        android:title="Feedback" />
 </menu>

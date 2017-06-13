@@ -1,6 +1,7 @@
 package com.haozi1994.filemonitorintime;
 
 import android.os.Bundle;
+import android.os.FileObserver;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -14,12 +15,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import static android.R.attr.data;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    FileObserver observer;
+
+    public MainActivity() {
+        this.observer = new FileObserver("/") {
+            @Override
+            public void onEvent(int event, String path) {
+                System.out.println("event:" + event + ", path:" + path);
+            }
+        };
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +125,8 @@ public class MainActivity extends AppCompatActivity
 //
 //        } else
         if (id == R.id.ads) {
-
+            Toast.makeText(this, "Please send email to yonghaoz1994@gmail.com",
+                    Toast.LENGTH_LONG).show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
