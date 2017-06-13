@@ -1,10 +1,8 @@
 package com.haozi1994.filemonitorintime;
 
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.FileObserver;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,20 +18,14 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
-import static android.R.attr.data;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     FileObserver observer;
 
     public MainActivity() {
-        this.observer = new FileObserver("/") {
-            @Override
-            public void onEvent(int event, String path) {
-                System.out.println("event:" + event + ", path:" + path);
-            }
-        };
+        this.observer = new RecursiveFileObserver(Environment.getExternalStorageDirectory().toString());
+        this.observer.startWatching();
     }
 
     @Override
