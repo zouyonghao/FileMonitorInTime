@@ -2,12 +2,15 @@ package cn.studyjams.s2.sj0209.filemonitorintime;
 
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -31,7 +34,6 @@ public class MainActivity extends AppCompatActivity
         this.observer = new RecursiveFileObserver(Environment.getExternalStorageDirectory().toString());
         files = new ArrayList<>();
         this.observer.setFiles(files);
-        this.observer.startWatching();
     }
 
     ArrayAdapter<String> adapter;
@@ -48,7 +50,7 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -56,18 +58,12 @@ public class MainActivity extends AppCompatActivity
 
         listView = (ListView) findViewById(R.id.list_view);
 
-        files.add("aaa");
-        adapter = new ArrayAdapter<String>(getApplicationContext(),
+        adapter = new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_list_item_1, files);
 
         adapter.setNotifyOnChange(true);
 
         listView.setAdapter(adapter);
-
-        files.add("bbb");
-        adapter.notifyDataSetChanged();
-//        adapter.insert("aaa",0);
-        adapter.add("ccc");
 
         observer.setAdapter(adapter);
 
@@ -75,39 +71,12 @@ public class MainActivity extends AppCompatActivity
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(10000);
+    }
 
-                    File test = new File(Environment.getExternalStorageDirectory().toString() + "/aaa");
-                    File test1 = new File(Environment.getExternalStorageDirectory().toString()+"/bbb");
-                    File test2 = new File(Environment.getExternalStorageDirectory().toString()+"/ccc");
-                    File test3 = new File(Environment.getExternalStorageDirectory().toString()+"/d");
-
-                    if (test.exists()) {
-                        test.delete();
-                    }
-                    test.mkdir();
-                    if (test1.exists()) {
-                        test1.delete();
-                    }
-                    test1.mkdir();
-                    if (test2.exists()) {
-                        test2.delete();
-                    }
-                    test2.mkdir();
-                    //test.createNewFile();
-//                    test1.mkdir();
-//                    test2.mkdir();
-//                    test3.mkdir();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        this.observer.startWatching();
     }
 
     @Override
@@ -144,7 +113,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

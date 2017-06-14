@@ -12,9 +12,10 @@ import java.util.Stack;
 
 /**
  * Created by zyh on 2017/6/13.
+ * RecursiveFileObserver for watch file changes.
  */
 @SuppressWarnings(value = {"rawtypes", "unchecked"})
-public class RecursiveFileObserver extends FileObserver {
+class RecursiveFileObserver extends FileObserver {
 
     /**
      * Only modification events
@@ -22,15 +23,15 @@ public class RecursiveFileObserver extends FileObserver {
     public static int CHANGES_ONLY = CREATE | DELETE | CLOSE_WRITE
             | DELETE_SELF | MOVE_SELF | MOVED_FROM | MOVED_TO;
 
-    List mObservers;
-    String mPath;
-    int mMask;
+    private List mObservers;
+    private String mPath;
+    private int mMask;
 
-    public RecursiveFileObserver(String path) {
+    RecursiveFileObserver(String path) {
         this(path, ALL_EVENTS);
     }
 
-    public RecursiveFileObserver(String path, int mask) {
+    private RecursiveFileObserver(String path, int mask) {
         super(path, mask);
         mPath = path;
         mMask = mask;
@@ -43,10 +44,10 @@ public class RecursiveFileObserver extends FileObserver {
 
     @Override
     public void startWatching() {
-        running = true;
-        watchThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
+                running = true;
                 if (mObservers != null)
                     return;
 
@@ -55,27 +56,28 @@ public class RecursiveFileObserver extends FileObserver {
                 stack.push(mPath);
 
                 while (!stack.isEmpty() && running) {
-                    String parent = (String) stack.pop();
-                    mObservers.add(new SingleFileObserver(parent, mMask));
-                    File path = new File(parent);
-                    File[] files = path.listFiles();
-                    if (null == files)
-                        continue;
-                    for (File f : files) {
-                        if (f.isDirectory() && !f.getName().equals(".")
-                                && !f.getName().equals("..") && !f.getName().contains(".")) {
-                            stack.push(f.getPath());
+                    try {
+                        String parent = (String) stack.pop();
+                        SingleFileObserver observer = new SingleFileObserver(parent, mMask);
+                        mObservers.add(observer);
+                        observer.startWatching();
+                        File path = new File(parent);
+                        File[] files = path.listFiles();
+                        if (null == files)
+                            continue;
+                        for (File f : files) {
+                            if (f.isDirectory() && !f.getName().equals(".")
+                                    && !f.getName().equals("..") && !f.getName().contains(".")) {
+                                stack.push(f.getPath());
+                            }
                         }
+                    } catch (Exception e) {
+                        Log.e("WatchERROR", "error", e);
                     }
                 }
-
-                for (int i = 0; i < mObservers.size(); i++) {
-                    SingleFileObserver sfo = (SingleFileObserver) mObservers.get(i);
-                    sfo.startWatching();
-                }
             }
-        });
-        watchThread.start();
+        }).start();
+
     }
 
     @Override
@@ -95,12 +97,12 @@ public class RecursiveFileObserver extends FileObserver {
 
     @Override
     public void onEvent(int event, String path) {
-        if (!path.contains("null")) {
-            this.adapter.add(path.substring(path.indexOf(mPath) + mPath.length()));
+        path = path.substring(path.indexOf(mPath) + mPath.length());
+        if (!path.contains("null") && !this.files.contains(path)) {
+            this.files.add(path);
+            this.adapter.notifyDataSetChanged();
         }
-//        if (this.adapter != null) {
-//            this.adapter.notifyDataSetChanged();
-//        }
+
         switch (event) {
             case FileObserver.ACCESS:
                 Log.i("RecursiveFileObserver", "ACCESS: " + path);
@@ -144,7 +146,7 @@ public class RecursiveFileObserver extends FileObserver {
         }
     }
 
-    public void setAdapter(ArrayAdapter<String> adapter) {
+    void setAdapter(ArrayAdapter<String> adapter) {
         this.adapter = adapter;
     }
 
@@ -152,7 +154,7 @@ public class RecursiveFileObserver extends FileObserver {
      * Monitor single directory and dispatch all events to its parent, with full
      * path.
      */
-    class SingleFileObserver extends FileObserver {
+    private class SingleFileObserver extends FileObserver {
         String mPath;
 
         public SingleFileObserver(String path) {
@@ -160,7 +162,7 @@ public class RecursiveFileObserver extends FileObserver {
             mPath = path;
         }
 
-        public SingleFileObserver(String path, int mask) {
+        SingleFileObserver(String path, int mask) {
             super(path, mask);
             mPath = path;
         }
@@ -172,7 +174,7 @@ public class RecursiveFileObserver extends FileObserver {
         }
     }
 
-    public void setFiles(List<String> files) {
+    void setFiles(List<String> files) {
         this.files = files;
     }
 
