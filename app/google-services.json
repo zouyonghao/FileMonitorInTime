@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:336355005448:android:892fa205d4c84f9b",
+        "mobilesdk_app_id": "1:336355005448:android:776ef087bfc47ff4",
         "android_client_info": {
-          "package_name": "com.haozi1994.filemonitorintime"
+          "package_name": "cn.studyjams.s2.sj0209"
         }
       },
       "oauth_client": [

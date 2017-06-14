@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.haozi1994.filemonitorintime.MainActivity">
+    tools:context="com.haozi1994.filemonitorintime.cn.studyjams.s2.sj0209.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

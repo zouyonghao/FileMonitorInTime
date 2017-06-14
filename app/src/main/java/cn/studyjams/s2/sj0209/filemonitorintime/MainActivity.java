@@ -1,8 +1,7 @@
-package com.haozi1994.filemonitorintime;
+package cn.studyjams.s2.sj0209.filemonitorintime;
 
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileObserver;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,8 +19,6 @@ import com.google.android.gms.ads.AdView;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -84,15 +81,23 @@ public class MainActivity extends AppCompatActivity
                 try {
                     Thread.sleep(10000);
 
-                    File test = new File(Environment.getExternalStorageDirectory().toString() + "/a");
-                    File test1 = new File(Environment.getExternalStorageDirectory().toString()+"/b");
-                    File test2 = new File(Environment.getExternalStorageDirectory().toString()+"/c");
+                    File test = new File(Environment.getExternalStorageDirectory().toString() + "/aaa");
+                    File test1 = new File(Environment.getExternalStorageDirectory().toString()+"/bbb");
+                    File test2 = new File(Environment.getExternalStorageDirectory().toString()+"/ccc");
                     File test3 = new File(Environment.getExternalStorageDirectory().toString()+"/d");
 
                     if (test.exists()) {
                         test.delete();
                     }
                     test.mkdir();
+                    if (test1.exists()) {
+                        test1.delete();
+                    }
+                    test1.mkdir();
+                    if (test2.exists()) {
+                        test2.delete();
+                    }
+                    test2.mkdir();
                     //test.createNewFile();
 //                    test1.mkdir();
 //                    test2.mkdir();

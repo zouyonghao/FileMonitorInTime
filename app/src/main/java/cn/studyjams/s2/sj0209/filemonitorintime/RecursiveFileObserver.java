@@ -1,4 +1,4 @@
-package com.haozi1994.filemonitorintime;
+package cn.studyjams.s2.sj0209.filemonitorintime;
 
 import android.os.FileObserver;
 import android.util.Log;
